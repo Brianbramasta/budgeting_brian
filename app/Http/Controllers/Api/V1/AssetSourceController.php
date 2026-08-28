@@ -31,7 +31,7 @@ class AssetSourceController extends BaseController
 
         $validated = $request->validate([
             'source_name' => 'sometimes|required|string|max:255',
-            'asset_type' => 'sometimes|required|in:cash,card,emergency,brokerage,other',
+            'asset_type' => 'sometimes|required|in:OBLIGASI,SAHAM,REKSADANA,EMAS,BANK,INVESTASI_LAIN',
             'balance' => 'sometimes|required|numeric|min:0',
         ]);
 

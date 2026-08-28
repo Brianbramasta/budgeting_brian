@@ -2,21 +2,25 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AssetSource;
+use App\Models\BudgetPlan;
+use App\Models\ExpenseTransaction;
+use App\Models\InvestmentAsset;
+use App\Models\MonthlyAssetSnapshot;
+use App\Models\SavingsPocket;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            AssetSourceSeeder::class,
+            BudgetPlanSeeder::class,
+            ExpenseTransactionSeeder::class,
+            InvestmentAssetSeeder::class,
+            MonthlyAssetSnapshotSeeder::class,
+            SavingsPocketSeeder::class,
+        ]);
     }
 }

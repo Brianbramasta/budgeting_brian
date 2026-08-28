@@ -24,7 +24,7 @@ class MonthlySnapshotController extends BaseController
             MonthlyAssetSnapshot::create([
                 'snapshot_date' => $date,
                 'source_or_symbol' => $asset->source_name,
-                'category_type' => 'cash',
+                'category_type' => 'BANK_ASSET',
                 'total_value' => $asset->balance,
             ]);
         }
@@ -33,7 +33,7 @@ class MonthlySnapshotController extends BaseController
             MonthlyAssetSnapshot::create([
                 'snapshot_date' => $date,
                 'source_or_symbol' => $investment->symbol,
-                'category_type' => 'investment',
+                'category_type' => 'INVESTMENT',
                 'total_value' => $investment->current_value,
             ]);
         }

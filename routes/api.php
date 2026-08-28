@@ -1,19 +1,19 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\AssetSourceController;
+use App\Http\Controllers\Api\V1\BudgetPlanController;
+use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\ExpenseTransactionController;
+use App\Http\Controllers\Api\V1\InvestmentAssetController;
+use App\Http\Controllers\Api\V1\MonthlySnapshotController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::get('/dashboard/summary', [DashboardController::class, 'summary']);
+    Route::apiResource('assets', AssetSourceController::class);
+    Route::apiResource('budget-plans', BudgetPlanController::class);
+    Route::apiResource('expenses', ExpenseTransactionController::class);
+    Route::apiResource('investments', InvestmentAssetController::class);
+    Route::post('snapshots/generate', [MonthlySnapshotController::class, 'generate']);
+    Route::get('snapshots/history', [MonthlySnapshotController::class, 'history']);
 });

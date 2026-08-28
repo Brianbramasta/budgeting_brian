@@ -1,0 +1,596 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Budgeting & Net Worth Tracker API",
+    "description": "API untuk melacak spending, budgeting, dan net worth pengguna. Semua endpoint bersifat public tanpa authentication.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Server Local Development"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "Server Production"
+    }
+  ],
+  "tags": [
+    { "name": "Dashboard", "description": "Dashboard & Summary" },
+    { "name": "Assets", "description": "Manajemen Aset & Rekening" },
+    { "name": "Expenses", "description": "Transaksi Pengeluaran" },
+    { "name": "Budget Plans", "description": "Rencana Budget Bulanan" },
+    { "name": "Investments", "description": "Portofolio Investasi" },
+    { "name": "Snapshots", "description": "Snapshot & History" }
+  ],
+  "paths": {
+    "/api/v1/dashboard/summary": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Mengambil ringkasan dashboard",
+        "description": "Mengembalikan Net Worth, Total Pengeluaran Bulan Ini, dan Sisa Budget.",
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil data dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets": {
+      "get": {
+        "tags": ["Assets"],
+        "summary": "Mengambil semua aset",
+        "description": "Menampilkan seluruh saldo bank, dompet, dan platform aset.",
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil data aset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Assets"],
+        "summary": "Membuat aset baru",
+        "description": "Menambah akun/sumber aset baru.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aset berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{id}": {
+      "put": {
+        "tags": ["Assets"],
+        "summary": "Memperbarui aset",
+        "description": "Update saldo dompet/bank secara manual.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aset berhasil diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Assets"],
+        "summary": "Menghapus aset",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Aset berhasil dihapus"
+          }
+        }
+      }
+    },
+    "/api/v1/expenses": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Mengambil transaksi pengeluaran",
+        "description": "Menampilkan transaksi harian dengan dukungan filter tanggal.",
+        "parameters": [
+          {
+            "name": "date_from",
+            "in": "query",
+            "schema": { "type": "string", "format": "date" },
+            "description": "Tanggal mulai filter"
+          },
+          {
+            "name": "date_to",
+            "in": "query",
+            "schema": { "type": "string", "format": "date" },
+            "description": "Tanggal akhir filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil data pengeluaran",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Mencatat transaksi pengeluaran baru",
+        "description": "Mencatat transaksi baru dengan otomatis memotong saldo di AssetSource.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExpenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaksi pengeluaran berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/expenses/{id}": {
+      "delete": {
+        "tags": ["Expenses"],
+        "summary": "Menghapus transaksi pengeluaran",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transaksi pengeluaran berhasil dihapus"
+          }
+        }
+      }
+    },
+    "/api/v1/budget-plans": {
+      "get": {
+        "tags": ["Budget Plans"],
+        "summary": "Mengambil rencana budget",
+        "description": "Menampilkan rencana budget bulan berjalan dengan filter bulan.",
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil data budget plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetPlanListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Budget Plans"],
+        "summary": "Membuat atau memperbarui alokasi budget",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBudgetPlanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Budget plan berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetPlanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/investments": {
+      "get": {
+        "tags": ["Investments"],
+        "summary": "Mengambil portofolio investasi",
+        "description": "Menampilkan portofolio Kripto/Saham plus kalkulasi P/L real-time.",
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil data investasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvestmentListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Investments"],
+        "summary": "Menambah aset investasi baru",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvestmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aset investasi berhasil dibuat"
+          }
+        }
+      }
+    },
+    "/api/v1/investments/{id}": {
+      "put": {
+        "tags": ["Investments"],
+        "summary": "Update harga pasar atau jumlah unit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInvestmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aset investasi berhasil diperbarui"
+          }
+        }
+      }
+    },
+    "/api/v1/snapshots/generate": {
+      "post": {
+        "tags": ["Snapshots"],
+        "summary": "Hasilkan snapshot saldo bulanan",
+        "description": "Memicu pembuatan snapshot saldo bulanan secara manual.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateSnapshotRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Snapshot berhasil dibuat"
+          }
+        }
+      }
+    },
+    "/api/v1/snapshots/history": {
+      "get": {
+        "tags": ["Snapshots"],
+        "summary": "Melihat riwayat snapshot",
+        "description": "Menampilkan data riwayat Net Worth antar bulan untuk grafik.",
+        "responses": {
+          "200": {
+            "description": "Sukses mengambil riwayat snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "status": { "type": "integer", "example": 200 },
+              "message": { "type": "string", "example": "Success" }
+            }
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "net_worth": { "type": "number", "example": 15000000 },
+              "total_assets": { "type": "number", "example": 10000000 },
+              "total_investments": { "type": "number", "example": 5000000 },
+              "current_month_expense": { "type": "number", "example": 1200000 },
+              "budget_planned": { "type": "number", "example": 2000000 },
+              "budget_remaining": { "type": "number", "example": 800000 }
+            }
+          }
+        }
+      },
+      "AssetListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Asset" }
+          }
+        }
+      },
+      "Asset": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "source_name": { "type": "string", "example": "BRI Checking" },
+          "asset_type": { "type": "string", "example": "cash" },
+          "balance": { "type": "number", "example": 5000000 }
+        }
+      },
+      "AssetResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": { "$ref": "#/components/schemas/Asset" }
+        }
+      },
+      "CreateAssetRequest": {
+        "type": "object",
+        "required": ["source_name", "asset_type", "balance"],
+        "properties": {
+          "source_name": { "type": "string", "example": "BRI Checking" },
+          "asset_type": { "type": "string", "enum": ["cash", "card", "emergency", "brokerage", "other"] },
+          "balance": { "type": "number", "example": 5000000 }
+        }
+      },
+      "UpdateAssetRequest": {
+        "type": "object",
+        "properties": {
+          "source_name": { "type": "string" },
+          "asset_type": { "type": "string", "enum": ["cash", "card", "emergency", "brokerage", "other"] },
+          "balance": { "type": "number" }
+        }
+      },
+      "ExpenseListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExpenseResponse" }
+          }
+        }
+      },
+      "ExpenseResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer", "example": 1 },
+              "transaction_date": { "type": "string", "format": "date", "example": "2024-01-15" },
+              "item_name": { "type": "string", "example": "Groceries" },
+              "amount": { "type": "number", "example": 500000 },
+              "asset_source_id": { "type": "integer", "nullable": true },
+              "budget_plan_id": { "type": "integer", "nullable": true },
+              "week_category": { "type": "integer", "nullable": true }
+            }
+          }
+        }
+      },
+      "CreateExpenseRequest": {
+        "type": "object",
+        "required": ["transaction_date", "item_name", "amount"],
+        "properties": {
+          "transaction_date": { "type": "string", "format": "date", "example": "2024-01-15" },
+          "item_name": { "type": "string", "example": "Groceries" },
+          "amount": { "type": "number", "example": 500000 },
+          "budget_plan_id": { "type": "integer", "nullable": true, "example": 1 },
+          "asset_source_id": { "type": "integer", "nullable": true, "example": 1 },
+          "week_category": { "type": "integer", "nullable": true, "example": 1 }
+        }
+      },
+      "BudgetPlanListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BudgetPlanResponse" }
+          }
+        }
+      },
+      "BudgetPlanResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer", "example": 1 },
+              "month_year": { "type": "string", "format": "date", "example": "2024-01-01" },
+              "category_name": { "type": "string", "example": "Food" },
+              "unit_price": { "type": "number", "example": 500000 },
+              "planned_qty": { "type": "integer", "example": 4 },
+              "estimated_total": { "type": "number", "example": 2000000 }
+            }
+          }
+        }
+      },
+      "CreateBudgetPlanRequest": {
+        "type": "object",
+        "required": ["month_year", "category_name", "unit_price", "planned_qty"],
+        "properties": {
+          "month_year": { "type": "string", "format": "date", "example": "2024-01-01" },
+          "category_name": { "type": "string", "example": "Food" },
+          "unit_price": { "type": "number", "example": 500000 },
+          "planned_qty": { "type": "integer", "example": 4 }
+        }
+      },
+      "InvestmentListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/InvestmentResponse" }
+          }
+        }
+      },
+      "InvestmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "symbol": { "type": "string", "example": "BTC-USDT" },
+          "asset_class": { "type": "string", "enum": ["CRYPTO", "SAHAM", "EMAS"] },
+          "holdings_qty": { "type": "number", "example": 0.5 },
+          "avg_buy_price": { "type": "number", "example": 40000000 },
+          "current_price": { "type": "number", "example": 50000000 },
+          "current_value": { "type": "number", "readOnly": true, "example": 25000000 },
+          "unrealized_pl": { "type": "number", "readOnly": true, "example": 5000000 },
+          "category": { "type": "string", "example": "Core" }
+        }
+      },
+      "CreateInvestmentRequest": {
+        "type": "object",
+        "required": ["symbol", "asset_class", "holdings_qty", "avg_buy_price", "current_price"],
+        "properties": {
+          "symbol": { "type": "string", "example": "BTC-USDT" },
+          "asset_class": { "type": "string", "enum": ["CRYPTO", "SAHAM", "EMAS"] },
+          "holdings_qty": { "type": "number", "example": 0.5 },
+          "avg_buy_price": { "type": "number", "example": 40000000 },
+          "current_price": { "type": "number", "example": 50000000 },
+          "recommendation_action": { "type": "string", "nullable": true },
+          "category": { "type": "string", "enum": ["Core", "Growth", "Spekulatif"] }
+        }
+      },
+      "UpdateInvestmentRequest": {
+        "type": "object",
+        "properties": {
+          "current_price": { "type": "number", "example": 55000000 },
+          "holdings_qty": { "type": "number", "example": 0.6 }
+        }
+      },
+      "SnapshotListResponse": {
+        "type": "object",
+        "properties": {
+          "meta": { "type": "object" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SnapshotResponse" }
+          }
+        }
+      },
+      "SnapshotResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "snapshot_date": { "type": "string", "format": "date", "example": "2024-01-31" },
+          "source_or_symbol": { "type": "string", "example": "BRI Checking" },
+          "category_type": { "type": "string", "example": "cash" },
+          "total_value": { "type": "number", "example": 5000000 }
+        }
+      },
+      "GenerateSnapshotRequest": {
+        "type": "object",
+        "properties": {
+          "snapshot_date": { "type": "string", "format": "date", "example": "2024-01-31" }
+        }
+      }
+    }
+  }
+}

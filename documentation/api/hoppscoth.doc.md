@@ -1,0 +1,488 @@
+[
+  {
+    "v": 1,
+    "name": "Budgeting API",
+    "folders": [
+      {
+        "name": "Dashboard",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/dashboard/summary",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "Get Dashboard Summary"
+          }
+        ]
+      },
+      {
+        "name": "Assets",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/assets",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List All Assets"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/assets",
+            "method": "POST",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"source_name\": \"BRI Checking\",\n  \"asset_type\": \"cash\",\n  \"balance\": 5000000\n}"
+            },
+            "name": "Create New Asset"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/assets/{{id}}",
+            "method": "PUT",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "id",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"source_name\": \"BRI Checking\",\n  \"asset_type\": \"cash\",\n  \"balance\": 6000000\n}"
+            },
+            "name": "Update Asset"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/assets/{{id}}",
+            "method": "DELETE",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "id",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "Delete Asset"
+          }
+        ]
+      },
+      {
+        "name": "Expenses",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/expenses",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List All Expenses"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/expenses?date_from=2024-01-01&date_to=2024-12-31",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "date_from",
+                "value": "2024-01-01",
+                "active": true
+              },
+              {
+                "key": "date_to",
+                "value": "2024-12-31",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Expenses with Date Filter"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/expenses",
+            "method": "POST",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"transaction_date\": \"2024-01-15\",\n  \"item_name\": \"Groceries\",\n  \"amount\": 500000,\n  \"budget_plan_id\": 1,\n  \"asset_source_id\": 1\n}"
+            },
+            "name": "Create Expense Transaction (Auto deduct balance)"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/expenses/{{id}}",
+            "method": "DELETE",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "id",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "Delete Expense"
+          }
+        ]
+      },
+      {
+        "name": "Budget Plans",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/budget-plans",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Budget Plans"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/budget-plans?month=2024-01",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "month",
+                "value": "2024-01",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Budget Plans by Month"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/budget-plans",
+            "method": "POST",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"month_year\": \"2024-01-01\",\n  \"category_name\": \"Food\",\n  \"unit_price\": 500000,\n  \"planned_qty\": 4\n}"
+            },
+            "name": "Create Budget Plan"
+          }
+        ]
+      },
+      {
+        "name": "Investments",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/investments",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Investments"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/investments",
+            "method": "POST",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"symbol\": \"BTC-USDT\",\n  \"asset_class\": \"CRYPTO\",\n  \"holdings_qty\": 0.5,\n  \"avg_buy_price\": 40000000,\n  \"current_price\": 50000000,\n  \"category\": \"Core\"\n}"
+            },
+            "name": "Create Investment Asset"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/investments/{{id}}",
+            "method": "PUT",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "id",
+                "value": "1",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"current_price\": 55000000,\n  \"holdings_qty\": 0.6\n}"
+            },
+            "name": "Update Investment Price"
+          }
+        ]
+      },
+      {
+        "name": "Snapshots",
+        "folders": [],
+        "requests": [
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/snapshots/generate",
+            "method": "POST",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"snapshot_date\": \"2024-01-31\"\n}"
+            },
+            "name": "Generate Monthly Snapshot"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/snapshots/history",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Snapshot History"
+          },
+          {
+            "v": 1,
+            "endpoint": "{{base_url}}/api/v1/snapshots/history?category_type=cash",
+            "method": "GET",
+            "auth": {
+              "authType": "none",
+              "authActive": true
+            },
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "active": true
+              }
+            ],
+            "params": [
+              {
+                "key": "category_type",
+                "value": "cash",
+                "active": true
+              }
+            ],
+            "body": {
+              "contentType": null,
+              "body": null
+            },
+            "name": "List Snapshot History by Category"
+          }
+        ]
+      }
+    ],
+    "requests": []
+  }
+]

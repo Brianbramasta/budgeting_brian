@@ -1,0 +1,1 @@
+export { assetRepository, budgetPlanRepository, expenseRepository, investmentRepository, dashboardRepository, snapshotRepository, savingsPocketRepository } from './dataRepository'

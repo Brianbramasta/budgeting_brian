@@ -16,7 +16,10 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// / Tangani semua rute React (termasuk refresh halaman)
+Route::get('/{any}', function () {
+    return view('app'); // Pastikan nama view sesuai (misal: app.blade.php atau welcome.blade.php)
+})->where('any', '.*');
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
